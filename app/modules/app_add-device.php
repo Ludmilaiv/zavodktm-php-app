@@ -69,7 +69,6 @@ $users_dev = R::dispense('usersdevices');
 $users_dev->user_login = $log;
 $users_dev->my_device_id = $dev_id;
 $users_dev->device_name = $name;
-$users_dev->device_type = $dev->type;
 R::store($users_dev);
 //Проверим успешность добавления
 

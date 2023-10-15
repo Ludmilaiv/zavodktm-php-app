@@ -12,15 +12,24 @@
       exit;
       break;
 
-    // Андрею для новых устройств
+    // Для устройств
     
-    case "/temp": // Сюда отсылать массив температур в порядке, согдасованном с сеструхой
+    case "/temp": // Сюда отсылать массив температур в согласованном порядке
+      require_once("./app/modules/device_temperature.php");
+      break;
+    case "/temp.php": // Сюда отсылать массив температур в согласованном порядке
       require_once("./app/modules/device_temperature.php");
       break;
     case "/set":   // Сюда аналогично отсылать массив настроек
       require_once("./app/modules/device_settings.php");
       break;
+    case "/set.php":
+      require_once("./app/modules/device_settings.php");
+      break;
     case "/done":  // Сюда отсылать отчёт об успешно полученных настройках
+      require_once("./app/modules/device_done.php");
+      break;
+    case "/done.php":  
       require_once("./app/modules/device_done.php");
       break;
 
@@ -50,13 +59,15 @@
     case "/set-data":  // Отправка настроек приложением
       require_once("./app/modules/app_set-data.php");
       break;
-
     // Это временная поддержка для старых контроллеров и приложений
+    // default: 
+    //   header("Location: http://old.zavodktm.ru".$path_with_get);
+    //   exit;
+    //   break;
     default: 
-      header("Location: http://old.zavodktm.ru".$path_with_get);
+      header("Location: https://zavodktm.ru/myapp");
       exit;
       break;
-    
 }
 
 ?>
