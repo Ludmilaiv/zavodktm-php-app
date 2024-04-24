@@ -24,12 +24,18 @@ $links = array();
 // перебираем всех пользователей, зарегистрированных на данный емаил
 foreach($users as $user) {
     $login = $user->login;
-
+    $id = $user->id;
+    $session = R::findOne( 'sessions', 'userid = ?', [$id]);
+    if (!$session) {
+        $session = R::dispense('sessions');
+    }
     //генерируем хеш и вставляем в ссылку на восстановление
-    $hash = dechex(time()).md5(uniqid($email));
-    $user->hash = $hash;
+    $hash = dechex(time()).md5(uniqid($to));
+    $session->hash = password_hash($hash, PASSWORD_DEFAULT);
+    $session->userid = $id;
     R::store($user);
-    $link = 'https://' . $_SERVER['HTTP_HOST'] . '/recovery' . '?hash=' . $hash;
+    R::store($session);
+    $link = 'https://' . $_SERVER['HTTP_HOST'] . '/recovery' . '?user=' . $id . '&hash=' . $hash;
     $links[] = "Для восстановления доступа к аккаунту <b>" .$login. "</b> перейдите по ссылке: <a href=" . $link . ">$link</a>";
 }
 

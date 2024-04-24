@@ -15,17 +15,20 @@ if (!isset($_POST["password"]) || !isset($_POST["hash"])) {
 	exit;
 }
 
-$new_pass = $_POST["password"];
+$new_pass = password_hash($_POST["password"], PASSWORD_DEFAULT);
 $hash = $_POST["hash"];
+$id = $_POST["id"];
 
-$user  = R::findOne( 'users', 'hash = ?', [$hash]);
+$user  = R::findOne( 'users', 'id = ?', [$id]);
+$session = R::findOne( 'sessions', 'userid = ?', [$id]);
 
-if (isset($user)) 
+if (isset($user) && isset($session) && password_verify($hash, $session->hash))
 {
     $user->password = $new_pass;
     // сбрасываем хеш, чтобы нельзя было использовать ссылку второй раз
-    $user->hash = null;
+    $session->hash = null;
 	R::store($user);
+    R::store($session);
 } else {
 	echo "err0";
 	exit;
@@ -33,8 +36,8 @@ if (isset($user))
 
 //проверяем успешность
 
-$user = R::findOne( 'users', 'hash = ?', [$hash]);
-if (isset($user)) 
+$session = R::findOne( 'sessions', 'userid = ?', [$id]);
+if ($session->hash)
 {
 	echo "err0";
 }
