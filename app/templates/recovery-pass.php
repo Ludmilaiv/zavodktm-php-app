@@ -95,7 +95,11 @@
     const message = document.getElementById('message');
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        if (password.value.length < 6) {
+        if (!(/^[a-z0-9*&!.+$%@-]+/i.test(password.value))) {
+            message.innerHTML = "Пароль может состоять только из латинских букв, цифр и знаков *&!.+-$%@";
+            return;
+        }
+        if (password.value.length < 5) {
             message.innerHTML = 'Пароль слишком короткий';
             return;
         }
