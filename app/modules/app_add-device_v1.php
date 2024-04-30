@@ -10,9 +10,15 @@ if (!R::testConnection())
 	exit;
 }
 
-if (!isset($_POST["dev_id"]) or !isset($_POST["dev_name"]) or !isset($_POST["user_id"])) {
+if (!isset($_POST["dev_id"]) || !isset($_POST["dev_name"]) || !isset($_POST["user_id"]) || !isset($_POST["token"])) {
 	echo "err0";
 	exit;
+}
+
+$session = R::findOne('sessions', 'userid = ?', [$_POST['user_id']]);
+if (!isset($session) || password_verify($_POST["token"], $session->token)) {
+    echo "err0";
+    exit;
 }
 
 $dev_id = $_POST["dev_id"];

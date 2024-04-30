@@ -11,9 +11,15 @@ if (!R::testConnection())
 }
 
 // если скрипт запустили без данных, то выдаём ошибку
-if (!isset($_POST["dev_id"]) or !isset($_POST["new_name"])) {
+if (!isset($_POST["dev_id"]) || !isset($_POST["new_name"]) || !isset($_POST["user_id"]) || !isset($_POST["token"])) {
 	echo "err0";
 	exit;
+}
+
+$session = R::findOne('sessions', 'userid = ?', [$_POST['user_id']]);
+if (!isset($session) || password_verify($_POST["token"], $session->token)) {
+    echo "err0";
+    exit;
 }
 
 $dev_id = $_POST["dev_id"];

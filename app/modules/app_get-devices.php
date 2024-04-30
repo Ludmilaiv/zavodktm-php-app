@@ -6,14 +6,12 @@ require 'DBConn/dbconn.php';
 $_POST = json_decode(file_get_contents('php://input'), true);
 
 if (!R::testConnection())
-//если не связались с бд, то возвращаем ошибку
 {
     echo "err0";
         exit;
 }
 
 if (!isset($_POST['userID']))
-//если не пришли данные, то возвращаем ошибку
 {
     echo "err1";
     exit;

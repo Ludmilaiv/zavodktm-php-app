@@ -9,9 +9,18 @@ if (!R::testConnection()) {
   exit;
 }
 
-if (!isset($_POST['id'])) {
+if (!isset($_POST['id']) || !isset($_POST['userID']) || !isset($_POST['token'])) {
   echo "err";
   exit;
+}
+
+$id = $_POST['userID'];
+$token = $_POST['token'];
+
+$session = R::findOne('sessions', 'userid = ?', [$id]);
+if (!isset($session) || password_verify($token, $session->token)) {
+    echo "err";
+    exit;
 }
 
 $timeout = 300; //таймаут после окончания которого устройство считается оффлайн

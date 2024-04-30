@@ -1,0 +1,38 @@
+<?php 
+require 'DBConn/libs/rb-mysql.php';
+require 'DBConn/dbconn.php';
+
+$_POST = json_decode(file_get_contents('php://input'), true);
+
+if (!isset($_POST['userID']) || !isset($_POST['token']) || !iseet($_POST['sets']) || empty($_POST['sets'])) {
+    echo "err";
+    exit;
+}
+
+$id = $_POST['userID'];
+$token = $_POST['token'];
+
+$session = R::findOne('sessions', 'userid = ?', [$id]);
+if (!isset($session) || password_verify($token, $session->token)) {
+    echo "err";
+    exit;
+}
+
+$device = R::findOne('devices', 'my_id = ?', [$_POST['id']]);
+$set = R::findOne('sets', 'device_id = ?', [$device->id]);
+
+foreach ($_POST['sets'] as $key => $val) {
+  if ($key != 'id') {
+    $set[$key] = $val;
+  }
+}
+
+$datetime = new DateTime();         // получаем дату и время в Unix-формате
+
+$set->changed_datetime = $datetime->getTimestamp();
+
+$set->changed = 1;   // устанавливаем флаг об изменении настроек
+
+R::store($set);
+
+echo 1;

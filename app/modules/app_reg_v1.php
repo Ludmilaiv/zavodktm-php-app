@@ -80,7 +80,7 @@ if (!$session) {
 $session->token = $token;
 R::store($session);
 
-echo $user->id;
+echo json_encode(array('user'=>$user->id, 'token'=>$token));
 exit;
 
 ?>
