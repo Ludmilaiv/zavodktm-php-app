@@ -54,12 +54,12 @@ if (!isset($_POST['password2'])) {
         echo "err3";
         exit;
     }
-    $users = R::dispense('users');
-    $users->login = $log;
-    $users->password = password_hash($pas, PASSWORD_DEFAULT);;
-    $users->email = $mail;
-    R::store($users);
-
+    $user = R::dispense('users');
+    $user->login = $log;
+    $user->password = password_hash($pas, PASSWORD_DEFAULT);;
+    $user->email = $mail;
+    $user->not_confirm = true;
+    R::store($user);
     //Проверим успешность регистрации
     $user = R::findOne('users', 'login = ?', [$log]);
     if (!isset($user)) {
@@ -72,12 +72,9 @@ if (!isset($_POST['password2'])) {
 $user = R::findOne('users', 'login = ?', [$log]);
 
 $token = dechex(time()).md5(uniqid($pas));
-$session = R::findOne( 'sessions', 'userid = ?', [$user->id]);
-if (!$session) {
-    $session = R::dispense('sessions');
-    $session->userid = $user->id;
-}
-$session->token = $token;
+$session = R::dispense('sessions');
+$session->userid = $user->id;
+$session->token = password_hash($token, PASSWORD_DEFAULT);
 R::store($session);
 
 echo json_encode(array('user'=>$user->id, 'token'=>$token));

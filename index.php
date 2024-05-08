@@ -79,6 +79,15 @@ switch ($path) {
     case "/set-data-v1":
         require_once("./app/modules/app_set-data_v1.php");
         break;
+    case "/mail-confirm": // Подтверждение эл. почты
+        require_once("./app/modules/app_mail-confirm.php");
+        break;
+    case "/confirm": // Страница подтверждения эл. почты
+        require_once("./app/templates/mail-confirm.php");
+        break;
+    case "/get-confirm": // Проверить, подтверждён ли адрес эл. почты
+        require_once("./app/modules/app_get-confirm.php");
+        break;
 //    case "/get-notifications":
 //      require_once("./app/modules/app_notifications.php");
 //      break;

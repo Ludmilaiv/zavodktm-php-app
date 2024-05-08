@@ -12,9 +12,20 @@ if (!isset($_POST['userID']) || !isset($_POST['token']) || !iseet($_POST['sets']
 $id = $_POST['userID'];
 $token = $_POST['token'];
 
-$session = R::findOne('sessions', 'userid = ?', [$id]);
-if (!isset($session) || password_verify($token, $session->token)) {
-    echo "err";
+$sessions = R::find('sessions', 'userid = ?', [$id]);
+if (empty($sessions)) {
+    echo "err5";
+    exit;
+}
+$auth = false;
+foreach ($sessions as $session) {
+    if (password_verify($token, $session->token)) {
+        $auth = true;
+        break;
+    }
+}
+if (!$auth) {
+    echo "err5";
     exit;
 }
 

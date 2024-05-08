@@ -73,13 +73,13 @@ if (!R::testConnection()) {
 $hash = $_GET['hash'];
 $id = $_GET['user'];
 
-$session = R::findOne('sessions', 'userid = ?', [$id]);
-if (!isset($session)) { ?>
+$recovery = R::findOne('recovery', 'userid = ?', [$id]);
+if (!isset($recovery)) { ?>
     <p>Страница не актуальна</p></div></body>
     <?
     exit;
 } else {
-    if (!password_verify($hash, $session->hash)) {
+    if (!password_verify($hash, $recovery->hash)) {
         ?>
         <p>Страница не актуальна</p></div></body>
 
@@ -106,7 +106,7 @@ if (!isset($session)) { ?>
     const message = document.getElementById('message');
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        if (!(/^[a-z0-9*&!.+$%@-]+/i.test(password.value))) {
+        if (!(/^[A-Za-z0-9*&!.+$%@-]+$/i.test(password.value))) {
             message.innerHTML = "Пароль может состоять только из латинских букв, цифр и знаков *&!.+-$%@";
             return;
         }
