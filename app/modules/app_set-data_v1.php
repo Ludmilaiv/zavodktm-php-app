@@ -4,7 +4,7 @@ require 'DBConn/dbconn.php';
 
 $_POST = json_decode(file_get_contents('php://input'), true);
 
-if (!isset($_POST['userID']) || !isset($_POST['token']) || !iseet($_POST['sets']) || empty($_POST['sets'])) {
+if (!isset($_POST['userID']) || !isset($_POST['token']) || !isset($_POST['sets']) || empty($_POST['sets'])) {
     echo "err";
     exit;
 }
@@ -29,7 +29,7 @@ if (!$auth) {
     exit;
 }
 
-$device = R::findOne('devices', 'my_id = ?', [$_POST['id']]);
+$device = R::findOne('devices', 'my_id = ?', [$_POST['sets']['id']]);
 $set = R::findOne('sets', 'device_id = ?', [$device->id]);
 
 foreach ($_POST['sets'] as $key => $val) {

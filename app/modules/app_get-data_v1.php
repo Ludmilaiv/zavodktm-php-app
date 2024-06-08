@@ -17,20 +17,9 @@ if (!isset($_POST['id']) || !isset($_POST['userID']) || !isset($_POST['token']))
 $id = $_POST['userID'];
 $token = $_POST['token'];
 
-$sessions = R::find('sessions', 'userid = ?', [$id]);
-if (empty($sessions)) {
-    echo "err5";
-    exit;
-}
-$auth = false;
-foreach ($sessions as $session) {
-    if (password_verify($token, $session->token)) {
-        $auth = true;
-        break;
-    }
-}
-if (!$auth) {
-    echo "err5";
+$session = R::findOne('sessions', 'userid = ?', [$id]);
+if (!isset($session) || password_verify($token, $session->token)) {
+    echo "err";
     exit;
 }
 
@@ -52,8 +41,18 @@ if (!isset($temp) or !isset($set)) {     //проверяем, есть ли д�
   $delta_connect_time = $datetime_ms - $temp->datetime;  // сколько миллисекунд назад устройство в последний раз засылало данные
 
   if ($delta_connect_time >= $timeout) {   //если давно, то отправляем оффлайн
-    $data_temp_json = json_encode(["temp"=>[-1]]); 
+    $data_temp_json = json_encode(["temp"=>[-1], 'name'=>$name]);
   } else {   //иначе получаем все данные устройства
+    // если пришли настройки, то сохраняем их
+    if (!empty($_POST['sets'])) {
+      foreach ($_POST['sets'] as $key => $val) {
+        $set[$key] = $val;
+      }
+      $set->changed_datetime = $datetime->getTimestamp();
+      $set->changed = 1;   // устанавливаем флаг об изменении настроек
+      R::store($set);
+      $set = R::findOne('sets', 'device_id = ?', [$device->id]);
+    }
     $data_temp = array();   
     $data_set = array();
     for($i=1; $i<$type->temp_len; $i++) {
