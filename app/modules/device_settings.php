@@ -1,6 +1,7 @@
 <?php
 
 require 'DBConn/libs/rb-mysql.php';
+require 'app/modules/send_notification.php';
 
 $timeout = 300; // таймаут - 5 минут
 
@@ -12,7 +13,7 @@ R::setup('mysql:host=localhost;dbname=u0803985_climate', 'u0803985_user', 'Ludik
 
 
 
-if (!R::testConnection()) {   // Нет подключени к БД
+if (!R::testConnection()) {   // Нет подключения к БД
 
     echo "s3\x0D";
 
@@ -76,7 +77,10 @@ if (!isset($set)) {               //  если настройки устройс
 
 }
 
-
+// Корректировка данных для старого контроллера, у которого в настройках сохранены ошибочные данные
+if ($data[63] > 20) {
+	$data[63] = 0;
+}
 
 for ($key = 1; $key < $sets_len; $key++) {    //перебираем массив настроек и заносим их в БД
 
@@ -96,6 +100,15 @@ $set->changed = 0;   // сбрасываем флаг об изменении н
 
 R::store($set);
 
+if ($set['s63'] != 0) {
+    send_notifications($set['s63'], $data[0]);
+}
+//else {
+    //$current_notifications = R::find('notification', 'UPPER(devid) = UPPER(?) AND error_value = ?', [$data[0], $set['s63']]);
+  //  foreach ($current_notifications as $notification) {
+   //     R::trash($notification);
+   // }
+//}
 
 
 echo "s0\x0D"; // отвечаем, что всё норм

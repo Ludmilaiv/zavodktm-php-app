@@ -21,19 +21,15 @@ if (!isset($_POST["user_id"]) or !isset($_POST["subscription"])) {
 $user_id = $_POST["user_id"];
 $endpoint = json_encode($_POST["subscription"]["endpoint"]);
 
-$user_subscription  = R::findOne( 'pushsubscriptions', 'userid = ? AND endpoint = ?', [$user_id, $endpoint]);
-
-if (isset($user_subscription))
-{
-  R::trash($user_subscription);
-} else {
-	echo "err0";
-	exit;
+$user_subscriptions  = R::find( 'pushsubscriptions', 'endpoint = ?', [$endpoint]);
+foreach ($user_subscriptions as $user_subscription) {
+	R::trash($user_subscription);
 }
+
 
 //проверяем успешность удаления
 
-$user_subscription  = R::findOne( 'pushsubscriptions', 'userid = ? AND endpoint = ?', [$user_id, $endpoint]);
+$user_subscription  = R::findOne( 'pushsubscriptions', 'endpoint = ?', [$endpoint]);
 if (isset($user_subscription)) 
 {
 	echo "err0";

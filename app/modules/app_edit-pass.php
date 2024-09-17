@@ -20,15 +20,15 @@ $hash = $_POST["hash"];
 $id = $_POST["id"];
 
 $user  = R::findOne( 'users', 'id = ?', [$id]);
-$session = R::findOne( 'sessions', 'userid = ?', [$id]);
+$recovery = R::findOne( 'recovery', 'userid = ?', [$id]);
 
-if (isset($user) && isset($session) && password_verify($hash, $session->hash))
+if (isset($user) && isset($recovery) && password_verify($hash, $recovery->hash))
 {
     $user->password = $new_pass;
     // сбрасываем хеш, чтобы нельзя было использовать ссылку второй раз
-    $session->hash = null;
+    $recovery->hash = null;
 	R::store($user);
-    R::store($session);
+    R::store($recovery);
 } else {
 	echo "err0";
 	exit;
@@ -36,8 +36,8 @@ if (isset($user) && isset($session) && password_verify($hash, $session->hash))
 
 //проверяем успешность
 
-$session = R::findOne( 'sessions', 'userid = ?', [$id]);
-if ($session->hash)
+$recovery = R::findOne( 'recovery', 'userid = ?', [$id]);
+if ($recovery->hash)
 {
 	echo "err0";
 }

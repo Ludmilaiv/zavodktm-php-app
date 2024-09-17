@@ -52,4 +52,5 @@ if (!isset($temp) or !isset($set)) {     //проверяем, есть ли д�
     $data_temp_json = json_encode($data);
   }
 }
+
 echo $data_temp_json;

@@ -41,7 +41,7 @@ $dev = R::find('usersdevices', 'user_login = ?', [$user->login]);
 
 $array_dev = array();
 
-$timeout = 300; //таймаут после окончания которого устройство считается оффлайн
+$timeout = 20; //таймаут после окончания которого устройство считается оффлайн
 
 foreach ($dev as $i) {
     // Получаем идентификатор записи устройства в БД
@@ -50,6 +50,7 @@ foreach ($dev as $i) {
     $temps = R::findOne('temps', 'device_id = ?', [$device->id]);
     $sets = R::findOne('sets', 'device_id = ?', [$device->id]);
     $temp = -1000;
+    $icon = "";
     if (!isset($temps) || !isset($sets)) {
         $temp = -3000;
     } else {
@@ -60,12 +61,21 @@ foreach ($dev as $i) {
             $temp = -3000;
         } else {
             $temp = $temps->t2;
+            if ($temps->t1 >= 5) {
+                $icon = "service-block";
+            } elseif ($sets->s63 > 0) {
+                $icon = "danger";
+            } elseif ($temps->t2 == -1270 || $temps->t3 == -1270 || $temps->t4 == -1270 || $temps->t5 == -1270
+              || $temps->t6 == -1270 || $temps->t7 == -1270 || $temps->t8 == -1270) {
+                $icon = "warning";
+            }
         }
     }
     $d = [
         "name" => $i['device_name'],
         "id" => $i['my_device_id'],
-        "temp" => $temp
+        "temp" => $temp,
+        "icon" => $icon,
     ];
     array_push($array_dev, $d);
 }

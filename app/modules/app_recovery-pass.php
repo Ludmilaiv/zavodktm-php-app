@@ -25,16 +25,16 @@ $links = array();
 foreach($users as $user) {
     $login = $user->login;
     $id = $user->id;
-    $session = R::findOne( 'sessions', 'userid = ?', [$id]);
-    if (!$session) {
-        $session = R::dispense('sessions');
+    $recovery = R::findOne( 'recovery', 'userid = ?', [$id]);
+    if (!$recovery) {
+        $recovery = R::dispense('recovery');
     }
     //генерируем хеш и вставляем в ссылку на восстановление
     $hash = dechex(time()).md5(uniqid($to));
-    $session->hash = password_hash($hash, PASSWORD_DEFAULT);
-    $session->userid = $id;
+    $recovery->hash = password_hash($hash, PASSWORD_DEFAULT);
+    $recovery->userid = $id;
     R::store($user);
-    R::store($session);
+    R::store($recovery);
     $link = 'https://' . $_SERVER['HTTP_HOST'] . '/recovery' . '?user=' . $id . '&hash=' . $hash;
     $links[] = "Для восстановления доступа к аккаунту <b>" .$login. "</b> перейдите по ссылке: <a href=" . $link . ">$link</a>";
 }

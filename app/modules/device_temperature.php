@@ -2,7 +2,7 @@
 
 require 'DBConn/libs/rb-mysql.php';
 
-$timeout = 300; // таймаут - 5 минут
+$timeout = 300;
 
 
 
@@ -93,8 +93,6 @@ for ($key = 1; $key < $temp_len; $key++) {    //перебираем масси�
 $datetime = new DateTime();         // получаем дату и время в Unix-формате
 
 $temp->datetime = $datetime->getTimestamp();
-
-
 
 R::store($temp);
 

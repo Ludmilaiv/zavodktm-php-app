@@ -88,23 +88,29 @@ switch ($path) {
     case "/get-confirm": // Проверить, подтверждён ли адрес эл. почты
         require_once("./app/modules/app_get-confirm.php");
         break;
-//    case "/get-notifications":
-//      require_once("./app/modules/app_notifications.php");
-//      break;
-//    case "/push-subscribe":
-//      require_once("./app/modules/app_push_subscribe.php");
-//      break;
-//    case "/push-unsubscribe":
-//      require_once("./app/modules/app_push_unsubscribe.php");
-//      break;
-//    case "/tg-subscribe":
-//      require_once("./app/modules/app_tg_subscribe.php");
-//      break;
-//    case "/tg-unsubscribe":
-//      require_once("./app/modules/app_tg_unsubscribe.php");
-//      break;
+    case "/get-notifications":
+      require_once("./app/modules/app_notifications.php");
+      break;
+    case "/push-subscribe":
+      require_once("./app/modules/app_push_subscribe.php");
+      break;
+    case "/push-unsubscribe":
+      require_once("./app/modules/app_push_unsubscribe.php");
+      break;
+    case "/tg-subscribe":
+      require_once("./app/modules/app_tg_subscribe.php");
+      break;
+    case "/tg-unsubscribe":
+      require_once("./app/modules/app_tg_unsubscribe.php");
+      break;
+	case "/test":
+		require_once("./app/modules/test.php");
+		break;
+	case "/get-online":
+		require_once("./app/modules/serv_get-online.php");
+		break;
     default:
-        header("Location: http://zavodktm.ru/myapp");
+        header("Location: https://kotelktm.ru");
         exit;
         break;
 

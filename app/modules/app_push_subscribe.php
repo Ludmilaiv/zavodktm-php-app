@@ -22,12 +22,17 @@ $user_id = $_POST["user_id"];
 $keys = json_encode($_POST["subscription"]["keys"]);
 $endpoint = json_encode($_POST["subscription"]["endpoint"]);
 
-//добавляем в БД
-$subscriptions = R::dispense('pushsubscriptions');
-$subscriptions->userid = $user_id;
-$subscriptions->keys = $keys;
-$subscriptions->endpoint = $endpoint;
-R::store($subscriptions);
+// Проверяем, не включены ли уже уведомления для этого пользователя на эту конечную точку
+$user_subscription  = R::findOne( 'pushsubscriptions', 'userid = ? AND endpoint = ?', [$user_id, $endpoint]);
+if (!isset($user_subscription)) {
+	//добавляем в БД
+	$subscriptions = R::dispense('pushsubscriptions');
+	$subscriptions->userid = $user_id;
+	$subscriptions->keys = $keys;
+	$subscriptions->endpoint = $endpoint;
+	R::store($subscriptions);
+}
+
 //Проверим успешность добавления
 
 $user_subscription  = R::findOne( 'pushsubscriptions', 'userid = ? AND endpoint = ?', [$user_id, $endpoint]);

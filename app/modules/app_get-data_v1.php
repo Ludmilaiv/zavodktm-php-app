@@ -23,7 +23,7 @@ if (!isset($session) || password_verify($token, $session->token)) {
     exit;
 }
 
-$timeout = 300; //таймаут после окончания которого устройство считается оффлайн
+$timeout = 20; //таймаут после окончания которого устройство считается оффлайн
 
 $device = R::findOne('devices', 'my_id = ?', [$_POST['id']]);
 $user_dev = R::findOne('usersdevices', "my_device_id=?", [$_POST['id']]);
@@ -71,4 +71,5 @@ if (!isset($temp) or !isset($set)) {     //проверяем, есть ли д�
     $data_temp_json = json_encode($data);
   }
 }
+
 echo $data_temp_json;

@@ -1,6 +1,7 @@
 <?php 
 require 'DBConn/libs/rb-mysql.php';
 require 'DBConn/dbconn.php';
+require 'app/modules/send_notification.php';
 
 $_POST = json_decode(file_get_contents('php://input'), true);
 
@@ -45,5 +46,14 @@ $set->changed_datetime = $datetime->getTimestamp();
 $set->changed = 1;   // устанавливаем флаг об изменении настроек
 
 R::store($set);
+
+if ($set['s63'] != 0) {
+    send_notifications($set['s63'], $_POST['sets']['id']);
+} else {
+    $current_notifications = R::find('notification', 'devid = ?', [$_POST['sets']['id']]);
+    foreach ($current_notifications as $notification) {
+        R::trash($notification);
+    }
+}
 
 echo 1;
