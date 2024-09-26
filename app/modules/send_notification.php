@@ -38,6 +38,12 @@ function send_notifications($type, $id)
     } else if ($type == 16) {
 	    $title = "Запуск";
 	    $message = "Работа котла \"{name}\" запущена.";
+    } else if ($type == 15) {
+	    $title = "❗️ ПЕРЕГРЕВ!";
+	    $message = "Температура \"{name}\" превысила 95°.";
+    } else if ($type == 14) {
+	    $title = "❗️ УГАСАНИЕ!";
+	    $message = "Температура \"{name}\" ниже критической.";
     }
 	if ($message == "") {
 		echo "message is empty";

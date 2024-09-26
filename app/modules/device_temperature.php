@@ -76,12 +76,22 @@ $temp = R::findOne('temps', 'device_id = ?', [$device->id]);
 $set = R::findOne('sets', 'device_id = ?', [$device->id]);
 
 if ($set['s63'] == 0) {       // Отправка оповещения на останов/запуск котла
-	if ($data[1] == 0 && $temp['t1'] != 0 && $data[0] == "066DFF50") {
+	if ($data[1] == 0 && $temp['t1'] != 0) {
 		send_notifications(17, $data[0]);
 	}
+	if ($data[2] > 95 && $temp['t2'] <= 95) {   // Уведомление о перегреве
+		send_notifications(15, $data[0]);
+	} else {                        // Уведомление о низкой температуре
+		if ($set['s48'] > 0 && $set['s48'] < 255 && $data[2] < $set['s48']) {   // для новых контроллеров
+			send_notifications(14, $data[0]);
+		} else if ($set['s4'] > 0 && $set['s4'] < 255 && $data[2] < $set['s4']) { // для старых контроллеров
+			send_notifications(14, $data[0]);
+		}
+	}
+
 }
 
-if ($data[1] != 0 && $temp['t1'] == 0 && $data[0] == "066DFF50") {
+if ($data[1] != 0 && $temp['t1'] == 0) {
 	send_notifications(16, $data[0]);
 }
 
