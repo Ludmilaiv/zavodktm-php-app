@@ -73,6 +73,9 @@ switch ($path) {
     case "/reg-v1":
         require_once("./app/modules/app_reg_v1.php");
         break;
+	case "/reg-v1-admin":
+		require_once("./app/modules/app_reg_v1-admin.php");
+		break;
     case "/set-data":  // Отправка настроек приложением
         require_once("./app/modules/app_set-data.php");
         break;

@@ -47,6 +47,7 @@ if (!isset($dev))
 $user = R::load('users', $_POST['user_id']);
 
 $log = $user->login;
+$is_admin = $user->isadmin;
 
 //проверяем, не добавлено ли устройство этим пользователем
 $user_dev  = R::findOne( 'usersdevices', 'user_login = ? AND my_device_id = ?', [$log, $dev_id]);
@@ -57,12 +58,15 @@ if (isset($user_dev))
 }
 
 //не добавлено ли оно другим пользователем
-$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ?', [$dev_id]);
-if (isset($user_dev)) 
-{
-	echo "err3";
-	exit;
+if ($is_admin == 0) {
+	$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ?', [$dev_id]);
+	if (isset($user_dev))
+	{
+		echo "err3";
+		exit;
+	}
 }
+
 
 //обрабатываем данные
 $name = $_POST['dev_name'];

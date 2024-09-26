@@ -33,6 +33,11 @@ function send_notifications($type, $id)
     } else if ($type == 18) {
 	    $title = "Связь восстановлена.";
 		$message = "Контроллер \"{name}\" снова в сети.";
+    } else if ($type == 17) {
+	    $message = "Работа котла \"{name}\" остановлена.";
+    } else if ($type == 16) {
+	    $title = "Запуск";
+	    $message = "Работа котла \"{name}\" запущена.";
     }
 	if ($message == "") {
 		echo "message is empty";

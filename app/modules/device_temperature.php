@@ -1,6 +1,7 @@
 <?php
 
 require 'DBConn/libs/rb-mysql.php';
+require 'app/modules/send_notification.php';
 
 $timeout = 300;
 
@@ -72,6 +73,18 @@ if (count($data) != $temp_len) {   // если длина не совпадае�
 
 $temp = R::findOne('temps', 'device_id = ?', [$device->id]);
 
+$set = R::findOne('sets', 'device_id = ?', [$device->id]);
+
+if ($set['s63'] == 0) {       // Отправка оповещения на останов/запуск котла
+	if ($data[1] == 0 && $temp['t1'] != 0 && $data[0] == "066DFF50") {
+		send_notifications(17, $data[0]);
+	}
+}
+
+if ($data[1] != 0 && $temp['t1'] == 0 && $data[0] == "066DFF50") {
+	send_notifications(16, $data[0]);
+}
+
 if (!isset($temp)) {               //  если параметры устройства ещё не приходили ни разу, то создаём для них поле в БД
 
     $temp = R::dispense('temps');
@@ -97,10 +110,7 @@ $temp->datetime = $datetime->getTimestamp();
 R::store($temp);
 
 
-
 $response = "s0\x0D";      // далее формируем ответ устройству. 0-флаг успешной отправки
-
-$set = R::findOne('sets', 'device_id = ?', [$device->id]);
 
 if (isset($set)) {
 

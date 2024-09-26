@@ -103,12 +103,6 @@ R::store($set);
 if ($set['s63'] != 0) {
     send_notifications($set['s63'], $data[0]);
 }
-//else {
-    //$current_notifications = R::find('notification', 'UPPER(devid) = UPPER(?) AND error_value = ?', [$data[0], $set['s63']]);
-  //  foreach ($current_notifications as $notification) {
-   //     R::trash($notification);
-   // }
-//}
 
 
 echo "s0\x0D"; // отвечаем, что всё норм
