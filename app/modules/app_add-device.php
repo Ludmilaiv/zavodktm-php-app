@@ -15,7 +15,7 @@ if (!isset($_POST["dev_id"]) or !isset($_POST["dev_name"]) or !isset($_POST["use
 	exit;
 }
 
-$dev_id = $_POST["dev_id"];
+$dev_id = strtoupper($_POST["dev_id"]);
 $dev_name = $_POST["dev_name"];
 
 

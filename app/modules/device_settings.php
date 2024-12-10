@@ -2,12 +2,13 @@
 
 require 'DBConn/libs/rb-mysql.php';
 require 'app/modules/send_notification.php';
+require 'DBConn/dbconn.php';
 
 $timeout = 300; // таймаут - 5 минут
 
 
 
-R::setup('mysql:host=localhost;dbname=u0803985_climate', 'u0803985_user', 'Ludiky123');
+//R::setup('mysql:host=localhost;dbname=u0803985_climate', 'u0803985_user', 'Ludiky123');
 
 //R::setup('mysql:host=localhost;dbname=u0803985_climate', 'root', '');
 
@@ -80,6 +81,15 @@ if (!isset($set)) {               //  если настройки устройс
 // Корректировка данных для старого контроллера, у которого в настройках сохранены ошибочные данные
 if ($data[63] > 20) {
 	$data[63] = 0;
+}
+
+// Удаляем старую стату при изменении периода сохранения
+if ($data[23] != $set['s23']) {
+	$stat = R::find('statistic', 'devid=?', [$device->id]);
+	foreach ($stat as $devStat) {
+		$ds = R::findOne('statistic', 'id=?', [$devStat->id]);
+		R::trash($ds);
+	}
 }
 
 for ($key = 1; $key < $sets_len; $key++) {    //перебираем массив настроек и заносим их в БД

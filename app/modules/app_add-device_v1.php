@@ -59,11 +59,13 @@ if (isset($user_dev))
 
 //не добавлено ли оно другим пользователем
 if ($is_admin == 0) {
-	$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ?', [$dev_id]);
-	if (isset($user_dev))
-	{
-		echo "err3";
-		exit;
+	$users_dev  = R::find( 'usersdevices', 'my_device_id = ?', [$dev_id]);
+	foreach ($users_dev as $user_dev) {
+		$user = R::findOne('users', 'login = ?', [$user_dev->user_login]);
+		if ($user && $user->isadmin == 0){
+			echo "err3";
+			exit;
+		}
 	}
 }
 

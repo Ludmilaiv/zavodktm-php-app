@@ -35,7 +35,9 @@ if (!$auth) {
 
 $dev_id = $_POST["dev_id"];
 
-$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ?', [$dev_id]);
+$user = R::findOne('users', 'id = ?', [$_POST["user_id"]]);
+
+$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ? AND user_login = ?', [$dev_id, $user->login]);
 
 $dev_name = "";
 if (isset($user_dev)) 
@@ -50,7 +52,7 @@ if (isset($user_dev))
 
 //проверяем успешность удаления
 
-$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ?', [$dev_id]);
+$user_dev  = R::findOne( 'usersdevices', 'my_device_id = ? AND user_login = ?', [$dev_id, $user->login]);
 if (isset($user_dev)) 
 {
 	echo "err0";

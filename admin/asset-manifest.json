@@ -1,0 +1,35 @@
+{
+  "files": {
+    "main.css": "/admin/static/css/main.a40bedfe.css",
+    "main.js": "/admin/static/js/main.fec3dc79.js",
+    "static/js/787.9304dced.chunk.js": "/admin/static/js/787.9304dced.chunk.js",
+    "static/media/Exo2-VariableFont_wght.ttf": "/admin/static/media/Exo2-VariableFont_wght.cb945e8e8b28126e47ad.ttf",
+    "static/media/Myriad Pro Bold Italic.ttf": "/admin/static/media/Myriad Pro Bold Italic.7f00845cbab4949cebd0.ttf",
+    "static/media/a_lcdnova.ttf": "/admin/static/media/a_lcdnova.46b8980cb4fdab83f593.ttf",
+    "static/media/Segment7.svg": "/admin/static/media/Segment7.34d6d29715069aa239c9.svg",
+    "static/media/ds-digital_bold_italic.svg": "/admin/static/media/ds-digital_bold_italic.620633aecd572e2fb2e1.svg",
+    "static/media/ds-digital_bold_italic.eot": "/admin/static/media/ds-digital_bold_italic.4ec614e8f9b4014266c9.eot",
+    "static/media/ds-digital_bold_italic.ttf": "/admin/static/media/ds-digital_bold_italic.d0adaf654a92dc0771d4.ttf",
+    "static/media/Segment7.eot": "/admin/static/media/Segment7.4ff516b394c97ae1f18c.eot",
+    "static/media/Segment7.otf": "/admin/static/media/Segment7.fd88e4c6bbf8c3867000.otf",
+    "static/media/ds-digital_bold_italic.woff": "/admin/static/media/ds-digital_bold_italic.09045fc5533d2b546481.woff",
+    "static/media/ds-digital_bold_italic.woff2": "/admin/static/media/ds-digital_bold_italic.64f83a2835c9e4cacb68.woff2",
+    "static/media/Segment7.woff": "/admin/static/media/Segment7.67409c45c01784588a41.woff",
+    "static/media/look.svg": "/admin/static/media/look.78c1cf8adf74d07a24ea.svg",
+    "static/media/look_offline.svg": "/admin/static/media/look_offline.163c79d7986f26f13420.svg",
+    "static/media/del.svg": "/admin/static/media/del.85c9b1526a0974cfdd8c.svg",
+    "static/media/del_offline.svg": "/admin/static/media/del_offline.b46ff97a04f0082b2e23.svg",
+    "index.html": "/admin/index.html",
+    "static/media/close.svg": "/admin/static/media/close.621dbfd4a26dbf6db185.svg",
+    "static/media/close_offline.svg": "/admin/static/media/close_offline.0608616d019e551c33d3.svg",
+    "static/media/edit.svg": "/admin/static/media/edit.4e2eb201097553fd3ddf.svg",
+    "static/media/edit_offline.svg": "/admin/static/media/edit_offline.98981e282ba3105522dd.svg",
+    "main.a40bedfe.css.map": "/admin/static/css/main.a40bedfe.css.map",
+    "main.fec3dc79.js.map": "/admin/static/js/main.fec3dc79.js.map",
+    "787.9304dced.chunk.js.map": "/admin/static/js/787.9304dced.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a40bedfe.css",
+    "static/js/main.fec3dc79.js"
+  ]
+}

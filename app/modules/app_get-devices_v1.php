@@ -1,6 +1,5 @@
 <?php
 require 'DBConn/libs/rb-mysql.php';
-//связываемся с БД
 require 'DBConn/dbconn.php';
 
 $_POST = json_decode(file_get_contents('php://input'), true);
@@ -18,15 +17,19 @@ if (!isset($_POST['userID']) || !isset($_POST['token'])) {
 $id = $_POST['userID'];
 $token = $_POST['token'];
 
+$datetime = new DateTime(); // получаем дату и время в Unix-формате
+
 $sessions = R::find('sessions', 'userid = ?', [$id]);
 if (empty($sessions)) {
     echo "err5";
     exit;
 }
 $auth = false;
+$sessionID = 0;
 foreach ($sessions as $session) {
     if (password_verify($token, $session->token)) {
         $auth = true;
+        $sessionID = $session->id;
         break;
     }
 }
@@ -35,13 +38,17 @@ if (!$auth) {
     exit;
 }
 
+$session = R::findOne('sessions', 'id = ?', [$sessionID]);
+$session->lastaccesstime = $datetime->getTimestamp();
+R::store($session);
+
 //находим все устройства пользователя
 $user = R::load('users', $id);
 $dev = R::find('usersdevices', 'user_login = ?', [$user->login]);
 
 $array_dev = array();
 
-$timeout = 20; //таймаут после окончания которого устройство считается оффлайн
+$timeout = 300; //таймаут после окончания которого устройство считается оффлайн
 
 foreach ($dev as $i) {
     // Получаем идентификатор записи устройства в БД
@@ -54,7 +61,6 @@ foreach ($dev as $i) {
     if (!isset($temps) || !isset($sets)) {
         $temp = -3000;
     } else {
-        $datetime = new DateTime(); // получаем дату и время в Unix-формате
         $datetime_ms = $datetime->getTimestamp();
         $delta_connect_time = $datetime_ms - $temps->datetime;  // сколько миллисекунд назад устройство в последний раз засылало данные
         if ($delta_connect_time >= $timeout) {   //если давно, то отправляем оффлайн

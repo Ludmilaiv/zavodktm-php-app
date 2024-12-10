@@ -1,6 +1,5 @@
 <?php
 require 'DBConn/libs/rb-mysql.php';
-//связываемся с БД
 require 'DBConn/dbconn.php';
 
 $_POST = json_decode(file_get_contents('php://input'), true);
@@ -8,6 +7,23 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 if (!R::testConnection()) {
     echo "err0";
     exit;
+}
+
+if (isset($_POST['logout']) && isset($_POST['id'])) {  // Выход из аккаунта
+	$sessions = R::find('sessions', 'userid = ?', [$_POST['id']]);
+	$sessionId = 0;
+	foreach ($sessions as $session) {
+		if (password_verify($_POST['logout'], $session['token'])) {
+			$sessionId = $session['id'];
+			break;
+		}
+	}
+	if ($sessionId != 0) {
+		$session = R::findOne('sessions', 'id = ?', [$sessionId]);
+		R::trash($session);
+		echo 1;
+		exit;
+	}
 }
 
 if (!isset($_POST['login']) || !isset($_POST['password'])) {
@@ -75,6 +91,8 @@ $token = dechex(time()).md5(uniqid($pas));
 $session = R::dispense('sessions');
 $session->userid = $user->id;
 $session->token = password_hash($token, PASSWORD_DEFAULT);
+$datetime = new DateTime();
+$session->lastaccesstime = $datetime->getTimestamp();
 R::store($session);
 
 echo json_encode(array('user'=>$user->id, 'token'=>$token));

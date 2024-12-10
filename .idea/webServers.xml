@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="0db6a4a1-3273-41bd-8f27-583824f1b4ed" name="ktm" url="http://ftp.u0803985.cp.regruhosting.ru">
-        <fileTransfer rootFolder="/public_html" host="ftp.u0803985.cp.regruhosting.ru" port="21">
+      <webServer id="a17fb5dd-9423-4b73-9d77-34f128313db7" name="ktm_beget" url="http://45.90.34.85">
+        <fileTransfer host="45.90.34.85" port="21">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

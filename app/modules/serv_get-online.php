@@ -1,6 +1,5 @@
 <?php
 	require 'DBConn/libs/rb-mysql.php';
-//связываемся с БД
 	require 'DBConn/dbconn.php';
 	require 'app/modules/send_notification.php';
 
@@ -9,14 +8,14 @@
 		exit;
 	}
 
-	$timeout = 300; //таймаут после окончания которого устройство считается оффлайн
+	$timeout = 1140; //таймаут после окончания которого устройство считается оффлайн
 
 	$devicesTable = R::findAll('temps');
 	$devices = array();
 	foreach ($devicesTable as $temp) {
 		$datetime = new DateTime();         // получаем дату и время в Unix-формате
 		$datetime_ms = $datetime->getTimestamp();
-		$delta_connect_time = $datetime_ms - $temp['datetime'];  // сколько миллисекунд назад устройство в последний раз засылало данные
+		$delta_connect_time = $datetime_ms - $temp['datetime'];  // сколько секунд назад устройство в последний раз засылало данные
 		$dev_online = R::findOne('devicesonline', 'devid = ?', [$temp->device_id]);
 
 		if ($delta_connect_time >= $timeout) {

@@ -47,6 +47,8 @@ $token = dechex(time()).md5(uniqid($pas));
 $session = R::dispense('sessions');
 $session->userid = $user->id;
 $session->token = password_hash($token, PASSWORD_DEFAULT);
+$datetime = new DateTime();
+$session->lastaccesstime = $datetime->getTimestamp();
 R::store($session);
 
 echo json_encode(array('user'=>$user->id, 'token'=>$token));

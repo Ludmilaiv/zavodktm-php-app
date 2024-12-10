@@ -3,6 +3,11 @@ require 'DBConn/libs/rb-mysql.php';
 //связываемся с БД
 require 'DBConn/dbconn.php';
 
+require 'vendors/PHPMailer/src/PHPMailer.php';
+require 'vendors/PHPMailer/src/SMTP.php';
+require 'vendors/PHPMailer/src/Exception.php';
+use PHPMailer\PHPMailer\PHPMailer;
+
 $_POST = json_decode(file_get_contents('php://input'), true);
 
 if (!R::testConnection())
@@ -20,6 +25,7 @@ if (!isset($users) || count($users) === 0 ) {
 }
 
 $links = array();
+$linksText = array();
 
 // перебираем всех пользователей, зарегистрированных на данный емаил
 foreach($users as $user) {
@@ -37,23 +43,50 @@ foreach($users as $user) {
     R::store($recovery);
     $link = 'https://' . $_SERVER['HTTP_HOST'] . '/recovery' . '?user=' . $id . '&hash=' . $hash;
     $links[] = "Для восстановления доступа к аккаунту <b>" .$login. "</b> перейдите по ссылке: <a href=" . $link . ">$link</a>";
+	$linksText[] = "Для восстановления доступа к аккаунту " .$login. " перейдите по ссылке: " . $link;
 }
 
-//создаём и отправляем сообщение
+$mail = new PHPMailer();
+$mail->CharSet = 'UTF-8';
+$mail->setFrom('info@zavodktm.ru', 'Biomatic');
+$mail->addAddress($to);
+$mail->Subject = $subject;
+
+$from = "Biomatic <info@zavodktm.ru>";
 $subject = 'Восстановление пароля';
-$message = "<h3>Был получен запрос на восстановления доступа к Вашeму аккаунту</h3>";
+$boundary = uniqid('np');
+
+//создаём и отправляем сообщение
+$mail = new PHPMailer();
+$mail->CharSet = 'UTF-8';
+$mail->setFrom('info@zavodktm.ru', 'Biomatic');
+$mail->addAddress($to);
+$mail->Subject = $subject;
+
+$messageText = "Был получен запрос на восстановления доступа к Вашeму аккаунту\n";
+if (count($links) > 1) {
+	$messageText .= "На данный email зарегистрировано несколько аккаунтов\n";
+}
+$messageText .= "\n" . join("\n", $linksText) . "\n";
+$messageText .= "Если Вы не запрашивали восстановление доступа, то проигнорируйте данное сообщение";
+
+$message = "<html><h3>Был получен запрос на восстановления доступа к Вашeму аккаунту</h3>";
 if (count($links) > 1) {
    $message .= "<h4>На данный email зарегистрировано несколько аккаунтов</h4>"; 
 }
 $message .= "<p>" . join("<br/>", $links) . "</p>";
 $message .= "Если Вы не запрашивали восстановление доступа, то проигнорируйте данное сообщение";
-$headers  = "Content-type: text/html; charset=utf-8 \r\n"; 
-$headers .= "From: biomatic <biomatic@zavodktm.ru>\r\n"; 
-$headers .= "Reply-To: " . $to . "\r\n"; 
+$message .= "</html>";
 
-//Отправка сообщения
-$curl = curl_init();
-$res = mail($to, $subject, $message, $headers); 
+$mail->msgHTML($message);
+$mail->AltBody = $messageText;
+
+// Настройка DKIM подписи
+$mail->DKIM_domain = 'zavodktm.ru';
+$mail->DKIM_private = 'DBConn/mail.private';
+$mail->DKIM_selector = 'mail';
+
+$res = $mail->send();
 
 if (!$res) {
 	echo "err2";

@@ -31,7 +31,26 @@ if (!$auth) {
 }
 
 $device = R::findOne('devices', 'my_id = ?', [$_POST['sets']['id']]);
+if (!isset($device)) {
+	echo 'err';
+	exit;
+}
+
 $set = R::findOne('sets', 'device_id = ?', [$device->id]);
+
+if (!isset($set)) {
+	echo 'err';
+	exit;
+}
+
+// Удаляем старую стату при изменении периода сохранения
+if (isset($_POST['sets']['s23']) && $_POST['sets']['s23'] != $set['s23']) {
+	$stat = R::find('statistic', 'devid=?', [$device->id]);
+	foreach ($stat as $devStat) {
+		$ds = R::findOne('statistic', 'id=?', [$devStat->id]);
+		R::trash($ds);
+	}
+}
 
 foreach ($_POST['sets'] as $key => $val) {
   if ($key != 'id') {
@@ -47,13 +66,13 @@ $set->changed = 1;   // устанавливаем флаг об изменен�
 
 R::store($set);
 
-if ($set['s63'] != 0) {
-    send_notifications($set['s63'], $_POST['sets']['id']);
-} else {
-    $current_notifications = R::find('notification', 'devid = ?', [$_POST['sets']['id']]);
-    foreach ($current_notifications as $notification) {
-        R::trash($notification);
-    }
-}
+//if ($set['s63'] != 0) {
+//    send_notifications($set['s63'], $_POST['sets']['id']);
+//} else {
+//    $current_notifications = R::find('notification', 'devid = ?', [$_POST['sets']['id']]);
+//    foreach ($current_notifications as $notification) {
+//        R::trash($notification);
+//    }
+//}
 
 echo 1;

@@ -1,8 +1,9 @@
 <?php
 require 'DBConn/libs/rb-mysql.php';
+require 'DBConn/dbconn.php';
 $timeout = 300000; // таймаут - 5 минут
 
-R::setup('mysql:host=localhost;dbname=u0803985_climate', 'u0803985_user', 'Ludiky123');
+//R::setup('mysql:host=localhost;dbname=u0803985_climate', 'u0803985_user', 'Ludiky123');
 //R::setup('mysql:host=localhost;dbname=u0803985_climate', 'root', '');
 
 if (!R::testConnection()) {   // Нет подключени к БД
