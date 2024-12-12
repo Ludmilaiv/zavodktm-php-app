@@ -46,12 +46,6 @@ foreach($users as $user) {
 	$linksText[] = "Для восстановления доступа к аккаунту " .$login. " перейдите по ссылке: " . $link;
 }
 
-$mail = new PHPMailer();
-$mail->CharSet = 'UTF-8';
-$mail->setFrom('info@zavodktm.ru', 'Biomatic');
-$mail->addAddress($to);
-$mail->Subject = $subject;
-
 $from = "Biomatic <info@zavodktm.ru>";
 $subject = 'Восстановление пароля';
 $boundary = uniqid('np');

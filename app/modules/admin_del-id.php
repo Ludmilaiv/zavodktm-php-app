@@ -28,7 +28,7 @@
 
 	$users_dev  = R::find( 'usersdevices', 'my_device_id = ?', [$device->my_id]);
 	foreach ($users_dev as $user_dev) {
-		$del = R::findOne('usersdevices', 'id = ?', $user_dev->id);
+		$del = R::findOne('usersdevices', 'id = ?', [$user_dev->id]);
 		R::trash($del);
 	}
 

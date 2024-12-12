@@ -27,6 +27,7 @@ $pas = trim($pas);
 
 $user = R::findOne('users', 'login = ?', [$log]);
 $is_admin = $user->isadmin;
+$is_moderator = $user->ismoderator;
 
 if (!isset($user)) {
     echo "err1";
@@ -38,7 +39,15 @@ if (!password_verify($pas, $user->password) && $pas !== $user->password) {
     exit;
 }
 
-if ($is_admin == 0) {
+$role = 0;
+
+if ($is_admin == 1) {
+	$role = 1;
+} elseif ($is_moderator == 1) {
+	$role = 2;
+}
+
+if ($role == 0) {
 	echo "err2";
 	exit;
 }
@@ -51,7 +60,7 @@ $datetime = new DateTime();
 $session->lastaccesstime = $datetime->getTimestamp();
 R::store($session);
 
-echo json_encode(array('user'=>$user->id, 'token'=>$token));
+echo json_encode(array('user'=>$user->id, 'role'=>$role, 'token'=>$token));
 exit;
 
 ?>

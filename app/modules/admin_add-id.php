@@ -112,7 +112,22 @@
 	}
 
 	$user = R::load('users', $id);
-	if (!$user || $user->isadmin == 0) {
+	if (!$user) {
+		echo "err";
+		exit;
+	}
+
+	$is_admin = $user->isadmin;
+	$is_moderator = $user->ismoderator;
+
+	$role = 0;
+	if ($is_admin == 1) {
+		$role = 1;
+	} elseif ($is_moderator == 1) {
+		$role = 2;
+	}
+
+	if ($role != 1 && $role != 2) {
 		echo "err";
 		exit;
 	}
@@ -138,7 +153,7 @@
 		exit;
 	}
 
-	if ($user['capcha_time']
+	if ($role == 2 && $user['capcha_time']
 	  && $datetime->getTimestamp() - $user['capcha_time'] < 60 * 60
 	  && $user['capcha_count'] >= 3) {
 		if (!isset($_POST['captcha']) || $_POST['captcha'] != $user->capcha) {

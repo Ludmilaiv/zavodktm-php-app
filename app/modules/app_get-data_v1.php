@@ -48,6 +48,10 @@ $user_dev = R::findOne('usersdevices', "my_device_id=? AND user_login = ?", [$_P
 $temp = R::findOne('temps', 'device_id = ?', [$device->id]);
 $type = R::findOne('ddtypes', 'type_id = ?', [$device->type]);
 $set = R::findOne('sets', 'device_id = ?', [$device->id]);
+if (!isset($device) || !isset($user_dev)) {
+	echo "err1";
+	exit;
+}
 $name = $user_dev->device_name;
 
 if (!isset($temp) or !isset($set)) {     //проверяем, есть ли данные, полученные от устройства

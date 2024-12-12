@@ -91,6 +91,9 @@ switch ($path) {
   case "/get-confirm": // Проверить, подтверждён ли адрес эл. почты
       require_once("./app/modules/app_get-confirm.php");
       break;
+	case "/get-user-info": // Получить данные о текущем пользователе (имя, роль)
+		require_once("./app/modules/app_get-user-info.php");
+		break;
   case "/get-notifications":
     require_once("./app/modules/app_notifications.php");
     break;

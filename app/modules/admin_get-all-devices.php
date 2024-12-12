@@ -38,9 +38,23 @@
 		echo "err5";
 		exit;
 	}
-
 	$user = R::load('users', $id);
-	if (!$user || $user->isadmin == 0) {
+	if (!$user) {
+		echo "err1";
+		exit;
+	}
+
+	$is_admin = $user->isadmin;
+	$is_moderator = $user->ismoderator;
+
+	$role = 0;
+	if ($is_admin == 1) {
+		$role = 1;
+	} elseif ($is_moderator == 1) {
+		$role = 2;
+	}
+
+	if ($role != 1) {
 		echo "err1";
 		exit;
 	}
